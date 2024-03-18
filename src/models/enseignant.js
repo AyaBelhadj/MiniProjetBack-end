@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User=require('./users')
 
 // Step 1: Define a schema
 const enseignantSchema = new mongoose.Schema({
@@ -28,14 +29,29 @@ const enseignantSchema = new mongoose.Schema({
    matricule: {
    type: String,
    required: true,
+   unique:true
    
  },
  grade: {
  type: String,
  required: true,
  
-}
- 
+},
+isActive: {
+  type: Boolean,
+  default:true
+},
+  chef_departement:{
+  type:mongoose.Types.ObjectId,
+  ref:'Enseignant'
+  ,default :null
+},
+   id_departement:
+{
+  type:mongoose.Types.ObjectId,
+  ref:'Departement'
+  ,required :true
+} 
 });
 
 // Step 2: Create a model

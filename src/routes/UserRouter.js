@@ -5,5 +5,5 @@ const route=express.Router();
 route.post("/createUser",userController.createuser)
 route.post("/login",userController.login)
 route.post("/changePwd",userAuth,userController.changePassword)
-route.post("/forgotPwd",userAuth,userController.forgotpassword)
+route.post("/forgotPwd",userAuth,userController.forgotpassword)//still in progress
 module.exports=route;

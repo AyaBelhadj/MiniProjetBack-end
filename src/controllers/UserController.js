@@ -11,7 +11,9 @@ module.exports={
         if (!role || !email || !password) {
           return res.status(400).json({ message: "Please enter all fields" });
         }
-    
+    if (role!="admin"){
+      return res.status(403).json({ message: "Access Denied :only admin !" });
+    }
         try {
           const user = await User.findOne({ email });
           console.log(user);

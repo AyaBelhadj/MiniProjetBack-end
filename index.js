@@ -16,8 +16,11 @@ app.use(express.json());
 
 app.use(cors())
 const userRoute=require('./src/routes/UserRouter');
-
 app.use("/user",userRoute);
+const DepartementRoute=require('./src/routes/DepartementRouter');
+app.use("/departement",DepartementRoute);
+const EnseignantRoute=require('./src/routes/EnseignantRouter');
+app.use("/enseignant",EnseignantRoute);
 
 app.get("/", (req, res) => { 
   res.send("Hello World"); 
