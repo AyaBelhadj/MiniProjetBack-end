@@ -138,25 +138,29 @@ module.exports={
       forgotpassword: async (req, res) => {
         console.log("forgot")
         const { email } = req.body;
-       // try {
+        if (!email){
+          return res.status(400).json({ message: "Please enter all fields" });
+
+        }
+        try {
           const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-              user: "asma3nii@gmail.com",
-              pass: "7ell wothnik asma3nii",
+              user: "youtchyou@gmail.com",
+              pass: "fbmb zrva nlxt bkhq",
             },
           });
     
-          // User.findOne({ email: email }, async (err, user) => {
-          //   if (!user) {
-          //     res.status(500).json({
-          //       message: "user with this email does not exist",
-          //     });
-          //   }
+          User.findOne({ email: email },).then(  async ( user) => {
+            if (!user) {
+              res.status(500).json({
+                message: "user with this email does not exist",
+              });
+            }
     
-          //   const token = jwt.sign({ id: user._id }, "jwt-secrett", {
-          //     expiresIn: "30m",
-          //   });
+            const token = jwt.sign({ id: user._id }, "secret", {
+              expiresIn: "30m",
+            });
     
             /*  user.resetPasswordToken = token;
             user.resetPasswordExpires = Date.now() + 3600000; // 1 heure
@@ -164,13 +168,13 @@ module.exports={
     */
     
             const mailOptions = {
-              from: "asma3nii@gmail.com",
-              to:  "youtchyou@gmail.com",
+              from: "youtchyou@gmail.com",
+              to:  user.email,
               subject: "Réinitialisation de votre mot de passe",
               text: `Bonjour,\n\nVous avez demandé à réinitialiser votre mot de passe. 
                      Veuillez cliquer sur le lien suivant ou le copier-coller dans votre navigateur
-                     pour poursuivre le processus 
-                     :\n\nhttp://localhost:3000/reset/\n\n
+                     pour poursuivre le processus: 
+                     \n\nhttp://localhost:3000/reset/${token}\n\n
                      Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet e-mail et votre mot de passe restera inchangé.\n`,
             
                     };
@@ -184,10 +188,60 @@ module.exports={
                 res.status(200).json({ message: "Email sent successfully" });
               }
             });
-         // });
-        // } catch (err) {
-        //   console.error(err);
-        //   res.status(500).json({ message: "Error resetting password" });
-        // }
+         });
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({ message: "Error resetting password" });
+        }
+      },
+      resetpassword: async (req, res) => {
+        const { password, confirmpassword } = req.body;
+        //return res.status(200).json({"aze":req.params.token})
+        console.log("reset")
+        console.log("reset", req.query.token)
+        let token = jwt.verify(req.query.token, "secret");
+        let _id = token.id;
+        if (!password||!confirmpassword){
+          return res.status(400).json({ message: "Please enter all fields" });
+
+        }
+    
+        try {
+          User.findById({ _id} ).then (async ( user) => {
+            if (!user) {
+              res.status(500).json({
+                message: "user not found ",
+                data: null,
+              });
+            } else {
+              if (password !== confirmpassword) {
+                return res.status(422).json({
+                  message: "validation error",
+                  errors: {
+                    details: [
+                      {
+                        path: ["confirm"],
+                        message: "password does not match",
+                      },
+                    ],
+                  },
+                  success: false,
+                });
+              }
+    
+              const salt = await bcrypt.genSalt(10);
+              const hashedPassword = await bcrypt.hash(password, salt);
+              user.password = hashedPassword;
+              user.save();
+              res.status(200).json({
+                message: "Password updated successfully",
+                data: user,
+              });
+            }
+          });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: "Error Reset password" });
+        }
       },
 }
