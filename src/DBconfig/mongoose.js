@@ -1,5 +1,10 @@
-const mongoose = require("mongoose");
-const mongoDB = "mongodb://127.0.0.1/miniprojetDB"; 
- mongoose. connect(  mongoDB,{ useUnifiedTopology: true, useNewUrlParser: true } ).then(() => console.log("MongoDB connection successful"))
- mongoose.Promise = global.Promise;
-module.exports=mongoose;
+require('dotenv').config()
+const mongoose = require('mongoose')
+
+const uri =process.env.mongoURI
+
+mongoose.connect(uri)
+.then(()=>{console.log("Connected to Data Base")})
+.catch((e)=>{console.log(e)})
+
+module.exports = mongoose

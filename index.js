@@ -1,11 +1,14 @@
-
+require ('dotenv').config()
 const express = require('express');
 const app = express();
 const port = 5700;
-const http = require("http");
-const mongoose = require('mongoose');
-const db = require('./src/DBconfig/mongoose')
+const http = require("http")
 const cors=require("cors")
+const mongoose=require('mongoose')
+const dataBase=require('./src/DBconfig/mongoose')
+
+
+
 const server = http.createServer(app);
 app.use(express.urlencoded({ extended: false }));
 // parse application/json

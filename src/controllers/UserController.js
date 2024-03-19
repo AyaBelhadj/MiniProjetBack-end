@@ -76,7 +76,7 @@ module.exports={
                   userId: user._id,
                   userEmail:user.email,
                   userAvatar:user.avatar,
-
+                  userRole:user.role
                 });
               }
             }
