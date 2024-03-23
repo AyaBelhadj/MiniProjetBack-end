@@ -5,11 +5,17 @@ const filiereSchema = new mongoose.Schema({
     nom: {
         type: String,
         required: true
+        
       },
         isActive: {
         type: Boolean,
         default:true
-      } 
+      } ,
+      niveau: {
+        type: String,
+        required: true
+
+      },
 });
 
 

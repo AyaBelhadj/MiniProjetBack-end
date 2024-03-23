@@ -19,6 +19,13 @@ app.use("/departement",DepartementRoute);
 const EnseignantRoute=require('./src/routes/EnseignantRouter');
 app.use(EnseignantRoute);
 
+const EtudiantRoute=require('./src/routes/EtudiantRouter');
+app.use(EtudiantRoute);
+const GroupeRoute=require('./src/routes/GroupeRouter');
+app.use(GroupeRoute);
+const FiliereRoute=require('./src/routes/FiliereRouter');
+app.use(FiliereRoute);
+
 
 server.listen(port, () => {
   console.log('Listening on port ' + port);

@@ -9,8 +9,9 @@ const route=express.Router();
 route.post("/createDepartement",adminAuth,departementController.createdepartement)
 route.post("/updateDepartement",adminAuth,departementController.updatedepartement)
 route.post("/archiverDepartement",adminAuth,departementController.archiverdepartement)
+route.post("/activerDepartement",adminAuth,departementController.activerdepartement)
 route.get("/getDepartement",userAuth,departementController.getdepartementByNameOrID)
-route.get("/getAllDepartement",userAuth,departementController.getalldepartement)
+route.get("/getAllDepartements",userAuth,departementController.getalldepartement)
 
 
 module.exports=route;

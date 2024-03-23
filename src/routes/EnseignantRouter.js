@@ -13,6 +13,8 @@ route.post(`${adminAPI}/createEnseignant`,adminAuth,enseignantController.createE
 route.post(`${adminAPI}/updateEnseignant`,adminAuth,enseignantController.updateEnseignant)
 route.post(`${ensAPI}/updateEnseignant`,ensAuth,enseignantController.updateEnseignant)
 route.post(`${adminAPI}/archiverEnseignant`,adminAuth,enseignantController.archiverenseignant)
+route.post(`${adminAPI}/activerEnseignant`,adminAuth,enseignantController.activerenseignant)
+
 route.get(`${adminAPI}/getEnseignant`,adminAuth,enseignantController.getenseignantByEmailOrMatricule)
 route.get(`${ensAPI}/getEnseignant`,ensAuth,enseignantController.getenseignantByEmailOrMatricule)
 route.get(`${adminAPI}/getAllEnseignants`,adminAuth,enseignantController.getallenseignant)

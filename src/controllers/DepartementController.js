@@ -101,6 +101,7 @@ module.exports={
         
             try {
               const dept = await Departement.findOneAndUpdate({ nom: nom }, {isActive:false}, {new:true}
+                
               ).then((departement)=>{console.log("seleeeeyem",departement);
               if (!departement) {
                 res.status(500).json({
@@ -119,6 +120,35 @@ module.exports={
               res.status(400).json({ error: e.message });
             }
           },
+          activerdepartement: async (req, res) => {
+            console.log('seleyem',req.body)
+              const { nom } = req.body;
+          
+              if (!nom  ) {
+                return res.status(400).json({ message: "Please enter all fields" });
+              }
+          
+              try {
+                const dept = await Departement.findOneAndUpdate({ nom: nom }, {isActive:true}, {new:true}
+                  
+                ).then((departement)=>{console.log("seleeeeyem",departement);
+                if (!departement) {
+                  res.status(500).json({
+                    message: "departement not recovered ",
+                    data: null,
+                  });
+                } else {
+                  res.status(200).json({
+                    message: "departement recovered successfuly ",
+                    
+                  });
+                }})
+                
+        
+              } catch (e) {
+                res.status(400).json({ error: e.message });
+              }
+            },
 
     getdepartementByNameOrID: async (req, res) => {
             console.log('seleyem',req.query)
