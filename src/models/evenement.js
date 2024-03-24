@@ -12,8 +12,24 @@ const evenementSchema = new mongoose.Schema({
         default:true
       },
       id_demandeur:{
-        
-      }
+       type:mongoose.Types.ObjectId,
+       ref:'User',
+       required :true
+       },
+       isAccepted: {
+        type: Boolean,
+        default:false
+      },
+      date_evenement: {
+        type: Date,
+        required: true
+    },
+    id_presentateur: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: true
+  },
+  
 
 
 
@@ -21,6 +37,6 @@ const evenementSchema = new mongoose.Schema({
 });
 
 // Step 2: Create a model
-const departement = mongoose.model('Departement', departementSchema);
+const evenement = mongoose.model('Evenement', evenementSchema);
 //module.exports = User.discriminator("Departement", departementSchema);
-module.exports = departement;
+module.exports = evenement;

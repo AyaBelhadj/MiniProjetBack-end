@@ -120,7 +120,7 @@ module.exports={
               res.status(400).json({ error: e.message });
             }
           },
-          activerdepartement: async (req, res) => {
+    activerdepartement: async (req, res) => {
             console.log('seleyem',req.body)
               const { nom } = req.body;
           

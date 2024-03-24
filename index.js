@@ -25,6 +25,8 @@ const GroupeRoute=require('./src/routes/GroupeRouter');
 app.use(GroupeRoute);
 const FiliereRoute=require('./src/routes/FiliereRouter');
 app.use(FiliereRoute);
+const EvenementRoute=require('./src/routes/EvenementRouter');
+app.use(EvenementRoute);
 
 
 server.listen(port, () => {

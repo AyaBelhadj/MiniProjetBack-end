@@ -1,11 +1,11 @@
-const Filiere = require("../models/filiere").filiere;
-const DepFiliere = require("../models/filiere").departement_filiere;
+const Filiere = require("../models/filiere")//.filiere;
+//const DepFiliere = require("../models/filiere").departement_filiere;
 module.exports={
     createFiliere: async (req, res) => {
       console.log('seleyem',req.body)
-        const {nom,niveau} = req.body;
+        const {nom,niveau,id_departement} = req.body;
     
-        if (!nom ||!niveau) {
+        if (!nom ||!niveau||!id_departement) {
           return res.status(400).json({ message: "Please enter all fields" });
         }
     
@@ -21,7 +21,8 @@ module.exports={
          
           const newFiliere = new Filiere({
             nom 
-            ,niveau
+            ,niveau,
+            id_departement
           });
           console.log('seleyem',newFiliere)
           const savedFiliere = await newFiliere.save();
@@ -38,9 +39,9 @@ module.exports={
       },
     updateFiliere: async (req, res) => {
         console.log('seleyem',req.body)
-          const { nom ,niveau,id} = req.body;
+          const { nom ,niveau,id,id_departement} = req.body;
       
-          if (!nom ||!niveau||!id ) {
+          if (!nom ||!niveau||!id||!id_departement ) {
             return res.status(400).json({ message: "Please enter all fields" });
           }
           
