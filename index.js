@@ -27,6 +27,9 @@ const FiliereRoute=require('./src/routes/FiliereRouter');
 app.use(FiliereRoute);
 const EvenementRoute=require('./src/routes/EvenementRouter');
 app.use(EvenementRoute);
+const MatiereRoute=require('./src/routes/MatiereRouter');
+app.use(MatiereRoute);
+
 
 
 server.listen(port, () => {
