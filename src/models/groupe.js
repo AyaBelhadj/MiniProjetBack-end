@@ -10,9 +10,8 @@ const groupeSchema = new mongoose.Schema({
       id_filiere: {
         type: mongoose.Schema.Types.ObjectId,
         ref :'Filiere', 
-        //unique:true,
-        //required:true
-        default:null
+        
+        required:true
     },
       
       isActive: {
@@ -25,7 +24,12 @@ const groupeSchema = new mongoose.Schema({
        moyenne:{
         type :Number,
         default : null 
-    } 
+    } ,
+    fichier_emploi: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Pdf',
+      default:null
+    },
 
       
 

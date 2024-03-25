@@ -1,5 +1,5 @@
 
-
+const Pdf=require("../models/Pdf")
 const Enseignant=require("../models/enseignant");
 const User=require("../models/users");
 const Departement=require('../models/departement')
@@ -101,6 +101,41 @@ module.exports={
         }
       },
     
+      uploadFile : async (req, res) => {
+        console.log('req.file is',req.file.fieldname)
+        if (!req.file) {
+          return res.status(400).json({ message: "Please enter the pdf file" });
+      
+        }
+        try {
+          const { originalname, buffer } = req.file;
+          const idEnseignant = req.query.id;
+              const pdf = new Pdf({
+            name: originalname,
+      
+            data: buffer
+          });
+          await pdf.save();
+          const enseignant = await Enseignant.findByIdAndUpdate({ _id: idEnseignant },{fichier_emploi :pdf._id }, {new:true}
+            )
+            if(!enseignant){
+             return res.status(500).json({
+                message: "enseignant file not uploaded ",
+                
+              });
+            }
+          res.status(200).json({
+            message: "enseignant file uploaded successfully ",
+            
+          });
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({
+            message: `server Error : ${err.message}`,
+            
+          });
+        }
+      },
     updateEnseignant: async (req, res) => {
         console.log('seleyem',req.body)
         const { nom,prenom,adresse,dateNaiss,numTel,matricule,grade,departementEns } = req.body;

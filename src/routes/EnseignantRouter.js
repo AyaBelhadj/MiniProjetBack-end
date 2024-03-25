@@ -5,6 +5,12 @@ const adminAuth=require('../middlewares/admin-auth');
 const ensAuth=require('../middlewares/enseignant-auth');
 const adminAPI='/admin';
 const ensAPI='/enseignant';
+
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+
 const route=express.Router();
 // route.post("/createUser",userController.createuser)
 // route.post("/login",userController.login)
@@ -14,6 +20,7 @@ route.post(`${adminAPI}/updateEnseignant`,adminAuth,enseignantController.updateE
 route.post(`${ensAPI}/updateEnseignant`,ensAuth,enseignantController.updateEnseignant)
 route.post(`${adminAPI}/archiverEnseignant`,adminAuth,enseignantController.archiverenseignant)
 route.post(`${adminAPI}/activerEnseignant`,adminAuth,enseignantController.activerenseignant)
+route.post(`${adminAPI}/enseignant/uploadFile`, upload.single('pdf'), adminAuth, enseignantController.uploadFile);
 
 route.get(`${adminAPI}/getEnseignant`,adminAuth,enseignantController.getenseignantByEmailOrMatricule)
 route.get(`${ensAPI}/getEnseignant`,ensAuth,enseignantController.getenseignantByEmailOrMatricule)

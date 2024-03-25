@@ -2,23 +2,21 @@ const mongoose = require('mongoose');
 
 // Étape 1: Définir un schéma
 const supportCoursSchema = new mongoose.Schema({
-    titre: {
+    nom: {
         type: String,
         required: true,
         unique: true
     },
-    description: {
-        type: String
-    },
-    fichier: {
+    
+    /*fichier: {
         type: String,
         required: true
-    },
+    },*/
     dateCreation: {
         type: Date,
         default: Date.now
     },
-    matiere: {
+    id_matiere: {
         type: mongoose.Types.ObjectId,
         ref: 'Matiere',
         required: true

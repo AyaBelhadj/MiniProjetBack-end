@@ -13,10 +13,6 @@ route.post(`${adminAPI}/updateMatiere`,adminAuth,matiereController.updateMatiere
  route.get(`${userAPI}/getAllMatieres`,userAuth,matiereController.getAllMatieres)
 
 
-// route.post(`${adminAPI}/accepterEvenement`,adminAuth,matiereController.accepterEvenement)
-// route.post(`${adminAPI}/archiverEvenement`,adminAuth,matiereController.archiverEvenement)
-// route.post(`${adminAPI}/activerEvenement`,adminAuth,matiereController.activerEvenement)
-// route.post(`${adminAPI}/updateEvenement`,adminAuth,matiereController.updateEvenement)
 
 
 

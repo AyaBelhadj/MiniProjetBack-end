@@ -2,13 +2,18 @@
 
 
 const Groupe = require("../models/groupe");
+const Pdf = require("../models/Pdf");
+
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 module.exports={
     createGroupe: async (req, res) => {
       console.log('seleyem',req.body)
         const {nom,id_filiere} = req.body;
     
-        if (!nom/*||!id_filiere*/ ) {
+        if (!nom||!id_filiere ) {
           return res.status(400).json({ message: "Please enter all fields" });
         }
     
@@ -36,11 +41,47 @@ module.exports={
           res.status(400).json({ message: e.message });
         }
       },
+
+      uploadFile : async (req, res) => {
+        console.log('req.file is',req.file.fieldname)
+        if (!req.file) {
+          return res.status(400).json({ message: "Please enter the pdf file" });
+      
+        }
+        try {
+          const { originalname, buffer } = req.file;
+          const idGroup = req.query.id;
+              const pdf = new Pdf({
+            name: originalname,
+      
+            data: buffer
+          });
+          await pdf.save();
+          const groupe = await Groupe.findByIdAndUpdate({ _id: idGroup },{fichier_emploi :pdf._id }, {new:true}
+            )
+            if(!groupe){
+             return res.status(500).json({
+                message: "groupe file not uploaded ",
+                
+              });
+            }
+          res.status(200).json({
+            message: "groupe file uploaded successfully ",
+            
+          });
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({
+            message: `server Error : ${err.message}`,
+            
+          });
+        }
+      },
     updateGroupe: async (req, res) => {
         console.log('seleyem',req.body)
-          const { nom,moyenne } = req.body;
+          const { nom,moyenne,id_filiere } = req.body;
       
-          if (!nom ||!moyenne ) {
+          if (!nom ||!moyenne||!id_filiere ) {
             return res.status(400).json({ message: "Please enter all fields" });
           }
           
@@ -183,7 +224,33 @@ module.exports={
               } catch (e) {
                 res.status(400).json({ error: e.message });
               }
-            }
+            },
+
+    getGroupsByFiliere:      async (req, res) => {
+      const  id_filiere  = req.query.id_filiere;
+
+          
+              
+      try {
+        const groupe = await Groupe.find({isActive : true,id_filiere:id_filiere}
+        ).then((groupe)=>{console.log("seleeeeyem",groupe);
+        if (!groupe) {
+          res.status(404).json({
+            message: "groups not found ",
+            
+          });
+        } else {
+          res.status(200).json({
+            message: "groups found successfuly ",
+            data:groupe
+          });
+        }})
+        
+
+      } catch (e) {
+        res.status(400).json({ error: e.message });
+      }
+    },   
 
 
 }
