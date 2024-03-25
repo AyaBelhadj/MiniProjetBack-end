@@ -1,6 +1,5 @@
-//TODO:envoyer un mail lors de la creation d un enseignant
 
-
+const Pdf=require("../models/Pdf")
 const Enseignant=require("../models/enseignant");
 const User=require("../models/users");
 const Departement=require('../models/departement')
@@ -42,7 +41,7 @@ module.exports={
          const hash = await bcrypt.hash(password, salt);
          if (!hash) throw Error("Something went wrong hashing the password");
          const role='enseignant';
-       
+
          const newEnseignant = new Enseignant({
            role:role,
            email:email,
@@ -58,8 +57,38 @@ module.exports={
            id_departement:departement._id
          });
          console.log('seleyem',newEnseignant)
+
+
          const savedEnseignant = await newEnseignant.save();
          if (!savedEnseignant) throw Error("Something went wrong saving the enseignant");
+         
+         const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "youtchyou@gmail.com",
+            pass: "fbmb zrva nlxt bkhq",
+          },
+        });
+         const mailOptions = {
+          from: "youtchyou@gmail.com",
+          to:  email,
+          subject: "ISSATSO++:Mot de Passe d'inscription ",
+          text: `Bonjour,\n\nvoici votre mot de passe pour se connecter a ISSATSO++.
+          Email: ${email}\n 
+          Password:${password}`,
+        
+                };
+
+        transporter.sendMail(mailOptions, (err, response) => {
+          if (err) {
+            console.error(err);
+
+            res.status(500).json({ message: "Error sending email" });
+          } else {
+            res.status(200).json({ message: "Email sent successfully" });
+          }
+        })
+
    
         
     
@@ -72,6 +101,42 @@ module.exports={
         }
       },
     
+      uploadFile : async (req, res) => {
+        console.log('req.file is',req.file.fieldname)
+        if (!req.file) {
+          return res.status(400).json({ message: "Please enter the pdf file" });
+      
+        }
+        try {
+          const { originalname, buffer } = req.file;
+          const idEnseignant = req.query.id;
+              const pdf = new Pdf({
+            name: originalname,
+            description:"emploi_enseignant",
+
+            data: buffer
+          });
+          await pdf.save();
+          const enseignant = await Enseignant.findByIdAndUpdate({ _id: idEnseignant },{fichier_emploi :pdf._id }, {new:true}
+            )
+            if(!enseignant){
+             return res.status(500).json({
+                message: "enseignant file not uploaded ",
+                
+              });
+            }
+          res.status(200).json({
+            message: "enseignant file uploaded successfully ",
+            
+          });
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({
+            message: `server Error : ${err.message}`,
+            
+          });
+        }
+      },
     updateEnseignant: async (req, res) => {
         console.log('seleyem',req.body)
         const { nom,prenom,adresse,dateNaiss,numTel,matricule,grade,departementEns } = req.body;
@@ -81,7 +146,7 @@ module.exports={
           }
       
           try {
-            const ens = await Enseignant.findOneAndUpdate({ matricule: matricule }, req.body, {new:true})
+            const ens = await Enseignant.findOneAndUpdate({ matricule: matricule }, req.body, {new:true,projection: { password: 0 }})
             console.log(ens);
             if (!ens){
               res.status(404).json({
@@ -118,6 +183,35 @@ module.exports={
               } else {
                 res.status(200).json({
                   message: "enseignant deleted successfuly ",
+                  
+                });
+              }})
+              
+      
+            } catch (e) {
+              res.status(400).json({ error: e.message });
+            }
+          },
+          
+
+     activerenseignant: async (req, res) => {
+          console.log('seleyem',req.body)
+            const { matricule } = req.body;
+        
+            if (!matricule  ) {
+              return res.status(400).json({ message: "Please enter all fields" });
+            }
+        
+            try {
+              const ens = await Enseignant.findOneAndUpdate({ matricule: matricule }, {isActive:true}, {new:true}
+              ).then((enseignant)=>{console.log("seleeeeyem",enseignant);
+              if (!enseignant) {
+                res.status(500).json({
+                  message: "enseignant not recovered ",
+                });
+              } else {
+                res.status(200).json({
+                  message: "enseignant recovered successfuly ",
                   
                 });
               }})

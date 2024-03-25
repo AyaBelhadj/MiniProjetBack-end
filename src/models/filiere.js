@@ -5,15 +5,27 @@ const filiereSchema = new mongoose.Schema({
     nom: {
         type: String,
         required: true
+        
       },
         isActive: {
         type: Boolean,
         default:true
-      } 
+      } ,
+      niveau: {
+        type: String,
+        required: true
+
+      },
+      id_departement: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref :'Departement', 
+        unique:true
+      }
 });
 
 
-const departement_filiere_Schema = new mongoose.Schema({
+/*const departement_filiere_Schema = new mongoose.Schema({
     
       id_Departement: {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,9 +39,10 @@ const departement_filiere_Schema = new mongoose.Schema({
         ref:'Filiere'
       }
 });
-
+*/
 
 // Step 2: Create a model
 const filiere = mongoose.model('Filiere', filiereSchema);
-const departement_filiere = mongoose.model('departement_filiere', departement_filiere_Schema);
-module.exports = {filiere,departement_filiere};
+//const departement_filiere = mongoose.model('departement_filiere', departement_filiere_Schema);
+//module.exports = {filiere,departement_filiere};
+module.exports = filiere;

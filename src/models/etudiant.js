@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
-
+//autoIncrement.initialize(mongoose.connection);
+const User=require("./users");
 
 // Step 1: Define a schema
 const etudiantSchema = new mongoose.Schema({
@@ -28,7 +29,7 @@ const etudiantSchema = new mongoose.Schema({
      
    }
    ,
-     numInscription: {
+   numInscription: {
      type: Number,
      required: true,
      
@@ -36,15 +37,21 @@ const etudiantSchema = new mongoose.Schema({
    isActive: {
     type: Boolean,
     default:true
+  },
+  id_groupe:{
+    type:mongoose.Types.ObjectId,
+    ref:'Groupe',
+    //required :true,
+    default :null// to change !! 
   }
  
 });
-etudiantSchema.plugin(autoIncrement.plugin, {
-    model: 'Etudiant',
-    field: 'numInscription', // The field to auto-increment
-    startAt: 1, // Start incrementing from 1
-    incrementBy: 1 // Increment by 1
-});
+// etudiantSchema.plugin(autoIncrement.plugin, {
+//     model: 'Etudiant',
+//     field: 'numInscription', // The field to auto-increment
+//     startAt: 1, // Start incrementing from 1
+//     incrementBy: 1 // Increment by 1
+// });
 // Step 2: Create a model
 //const enseignant = mongoose.model('Enseignant', userSchema);
 module.exports = User.discriminator("Etudiant", etudiantSchema);
