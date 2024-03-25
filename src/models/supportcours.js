@@ -8,10 +8,11 @@ const supportCoursSchema = new mongoose.Schema({
         unique: true
     },
     
-    /*fichier: {
-        type: String,
-        required: true
-    },*/
+    fichier: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Pdf',
+        default:null
+      },
     dateCreation: {
         type: Date,
         default: Date.now
@@ -21,11 +22,7 @@ const supportCoursSchema = new mongoose.Schema({
         ref: 'Matiere',
         required: true
     },
-    id_enseignant: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Enseignant',
-        required: true
-    }
+   
 });
 
 // Étape 2: Créer un modèle

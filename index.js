@@ -8,6 +8,8 @@ const db = require('./src/DBconfig/mongoose')
 const cors=require("cors")
 const multer = require('multer');
 const Pdf = require('./src/models/Pdf');
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./src/swagger")
 
 const server = http.createServer(app);
 app.use(express.urlencoded({ extended: false }));
@@ -34,55 +36,16 @@ const MatiereRoute=require('./src/routes/MatiereRouter');
 app.use(MatiereRoute);
 const NoteRoute=require('./src/routes/NoteRouter');
 app.use(NoteRoute);
-
-
-
-
-
-
+const SupportDeCoursRoute=require('./src/routes/SupportDeCoursRouter');
+app.use(SupportDeCoursRoute);
 
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 app.use(upload.single('pdf'));
-app.post('/upload', upload.single('pdf'), async (req, res) => {
-  try {
-    console.log("Uploaded file:", req.file);
 
-    const { originalname, buffer } = req.file;
-    const pdf = new Pdf({
-      name: originalname,
-      data: buffer
-    });
-    await pdf.save();
-    res.status(201).send('File uploaded successfully');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-});
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-/*
-const multer = require('multer');
- const storage = multer.memoryStorage(); 
- const upload = multer({ storage });
- app.post('/upload', upload.single('pdf'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).send('No file uploaded');
-    }
-
-    const { originalname, buffer } = req.file;
-    console.log("File uploaded:", originalname);
-    
-    // Further processing of the uploaded file, if needed
-
-    res.status(201).send('File uploaded successfully');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-});*/
 server.listen(port, () => {
   console.log('Listening on port ' + port);
 });

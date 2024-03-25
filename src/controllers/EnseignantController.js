@@ -112,7 +112,8 @@ module.exports={
           const idEnseignant = req.query.id;
               const pdf = new Pdf({
             name: originalname,
-      
+            description:"emploi_enseignant",
+
             data: buffer
           });
           await pdf.save();

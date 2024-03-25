@@ -54,7 +54,8 @@ module.exports={
               const pdf = new Pdf({
             name: originalname,
       
-            data: buffer
+            data: buffer,
+            description:"emploi_groupe"
           });
           await pdf.save();
           const groupe = await Groupe.findByIdAndUpdate({ _id: idGroup },{fichier_emploi :pdf._id }, {new:true}
