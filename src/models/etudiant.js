@@ -41,8 +41,8 @@ const etudiantSchema = new mongoose.Schema({
   id_groupe:{
     type:mongoose.Types.ObjectId,
     ref:'Groupe',
-    //required :true,
-    default :null// to change !! 
+    required :true,
+   
   }
  
 });
