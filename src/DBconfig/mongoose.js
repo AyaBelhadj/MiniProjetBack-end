@@ -1,5 +1,14 @@
 const mongoose = require("mongoose");
-const mongoDB = "mongodb://127.0.0.1/miniprojetDB"; 
- mongoose. connect(  mongoDB,{ useUnifiedTopology: true, useNewUrlParser: true } ).then(() => console.log("MongoDB connection successful"))
- mongoose.Promise = global.Promise;
-module.exports=mongoose;
+require("dotenv").config();
+
+const URL = process.env.DB_URL;
+mongoose.connect(URL, { useUnifiedTopology: true, useNewUrlParser: true })
+  .then(() => console.log("MongoDB connection successful"))
+  .catch(error => {
+    console.error("MongoDB connection error:", error);
+    // Add appropriate error handling here
+  });
+
+mongoose.Promise = global.Promise;
+
+module.exports = mongoose;

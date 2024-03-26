@@ -56,6 +56,12 @@
  *   post:
  *     summary: Upload emploi_enseignant file
  *     tags: [Enseignant]
+ *     parameters:
+ *       
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -63,7 +69,7 @@
  *           schema:
  *             type: object
  *             properties:
- *               file:
+ *               pdf:
  *                 type: string
  *                 format: binary
  *     responses:

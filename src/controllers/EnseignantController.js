@@ -24,7 +24,6 @@ module.exports={
           if (user) 
           {
           const enseignant = await Enseignant.findOne({ matricule });
-          console.log(enseignant);
           if (enseignant) 
           {return res.status(409).json({ message: " Enseignant already exists!" });}
           

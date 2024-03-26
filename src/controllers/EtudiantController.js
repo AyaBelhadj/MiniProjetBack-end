@@ -13,7 +13,7 @@ module.exports={
         const { nom,prenom,adresse,dateNaiss,numTel,email,id_groupe,numInscription } = req.body;
 
     
-        if (!nom ||!prenom||! adresse || !dateNaiss||! numTel||/*!id_groupe||*/!email||!numInscription) {
+        if (!nom ||!prenom||! adresse || !dateNaiss||! numTel||!id_groupe||!email||!numInscription) {
           return res.status(400).json({ message: "Please enter all fields" });
         }
     

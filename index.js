@@ -1,3 +1,4 @@
+require("dotenv").config();
 
 const express = require('express');
 const app = express();
@@ -45,7 +46,7 @@ const upload = multer({ storage });
 app.use(upload.single('pdf'));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
+console.log(process.env.DB_URL)
 server.listen(port, () => {
   console.log('Listening on port ' + port);
 });
