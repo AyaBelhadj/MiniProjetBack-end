@@ -80,6 +80,7 @@ module.exports = {
               res.status(200).json({
                 token: token,
                 userId: user._id,
+                userRole: user.role,
                 userEmail: user.email,
                 userAvatar: user.avatar,
               });
