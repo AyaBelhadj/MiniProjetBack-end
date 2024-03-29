@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Step 1: Define a schema
 const groupeSchema = new mongoose.Schema({
-    nom: {
+    nomGroupe: {
         type: String,
         required: true,
         unique :true
