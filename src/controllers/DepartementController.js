@@ -55,21 +55,20 @@ module.exports={
                 message: "departement not found "});
             }
             if (Chef_Departement!==olddept.chef_departement){
-              console.log('hhhhhhh',olddept.chef_departement)
               const ens = await Enseignant.findByIdAndUpdate({ _id: Chef_Departement }, {chef_departement:null}, {new:true})
               if (!ens){
                res.status(404).json({
                  message: "chef departement not found ",
                  
                }); }
-               const oldens = await Enseignant.findByIdAndUpdate({ _id: olddept.Chef_Departement }, {chef_departement:Chef_Departement}, {new:true})
-               console.log('hhhhhhh',oldens)
+               if(olddept.chef_departement)
+               {const oldens = await Enseignant.findByIdAndUpdate({ _id: olddept.Chef_Departement }, {chef_departement:Chef_Departement}, {new:true})
 
               if (!oldens){
                res.status(404).json({
                  message: "chef departement not found ",
                  
-               }); }
+               }); }}
 
 
             }

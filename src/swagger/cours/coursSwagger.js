@@ -39,6 +39,12 @@
  *   post:
  *     summary: Upload a file for a cours
  *     tags: [Cours]
+ *     parameters:
+ *       
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -46,11 +52,10 @@
  *           schema:
  *             type: object
  *             properties:
- *               file:
+ *               pdf:
  *                 type: string
  *                 format: binary
- *               id:
- *                 type: string
+ *               
  *     responses:
  *       200:
  *         description: File uploaded successfully
