@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const generatedPwd = require("../utils/generatePassword");
-const enseignant = require("../models/enseignant");
+
 module.exports = {
   createEnseignant: async (req, res) => {
     console.log("seleyem", req.body);
@@ -33,26 +33,27 @@ module.exports = {
       !email ||
       !departementEns
     ) {
-      return res.status(400).json({ message: "Please enter all fields" });
+      return res.status(400).json({ message: "Please fill all the fields" });
     }
 
     try {
+      const departement = await Departement.findOne({ nom: departementEns });
+      if (!departement) {
+        return res.status(404).json({
+          message: "Cannot create new Enseignant. Department not found!",
+        });
+      }
       const user = await User.findOne({ email });
       console.log(user);
       if (user) {
-        const enseignant = await Enseignant.findOne({ matricule });
-        if (enseignant) {
-          return res
-            .status(409)
-            .json({ message: " Enseignant already exists!" });
-        } else {
-          return res.status(409).json({ message: " user already exists!" });
-        }
+        return res.status(404).json({ message: "Account with the same email already exists!" });
       }
-      const departement = await Departement.findOne({ nom: departementEns });
-      if (!departement) {
-        return res.status(404).json({ message: " Departement not found!" });
-      }
+
+      const enseignant = await Enseignant.findOne({ matricule });
+      if (enseignant) {
+        return res.status(404).json({ message: "Enseignant with the same matricule already exists!" });
+      } 
+
       const chefDep = departement.Chef_Departement;
       const salt = await bcrypt.genSalt(10);
       if (!salt) throw Error("Something went wrong with bcrypt");
@@ -151,6 +152,7 @@ module.exports = {
       });
     }
   },
+
   updateEnseignant: async (req, res) => {
     console.log("seleyem", req.body);
     const {
@@ -174,28 +176,57 @@ module.exports = {
       !grade ||
       !departementEns
     ) {
-      return res.status(400).json({ message: "Please enter all fields" });
+      return res.status(400).json({
+        message: "Could not update Enseignant, Please enter all fields",
+      });
     }
 
     try {
-      const ens = await Enseignant.findOneAndUpdate(
+      const EnseigToUpdate = await Enseignant.findOne(
         { matricule: matricule },
         req.body,
-        { new: true, projection: { password: 0 } }
+        {
+          new: true,
+          projection: { password: 0 },
+        }
       );
-      console.log(ens);
-      if (!ens) {
-        res.status(404).json({
-          message: "enseignant  not found ",
+      console.log(EnseigToUpdate);
+      if (!EnseigToUpdate) {
+        return res.status(404).json({
+          message: "Could not update Enseignant, Enseignant not found ",
         });
       }
-
-      res.status(200).json({
-        message: "enseignant successfuly registred",
-        data: ens,
+      const departementEnseigExist = await Departement.findOne({
+        nom: departementEns,
+      });
+      if (!departementEnseigExist) {
+        return res.status(404).json({
+          message: "Could not update Enseignant, Departement not found",
+        });
+      }
+      const updatedEnseig = await Enseignant.findOneAndUpdate(
+        { matricule: matricule },
+        {
+          $set: {
+            nom: nom,
+            prenom: prenom,
+            adresse: adresse,
+            dateNaiss: dateNaiss,
+            numTel: numTel,
+            matricule: matricule,
+            grade: grade,
+            id_departement: departementEnseigExist._id,
+            chef_departement: departementEnseigExist.Chef_Departement,
+          },
+        },
+        { new: true, projection: { password: 0 } }
+      );
+      return res.status(200).json({
+        message: "Enseignant Updated Successfuly ",
+        data: updatedEnseig,
       });
     } catch (e) {
-      res.status(400).json({ error: e.message });
+      return res.status(500).json({ error: e.message });
     }
   },
 
@@ -289,7 +320,7 @@ module.exports = {
       res.status(400).json({ error: e.message });
     }
   },
-  
+
   getallenseignant: async (req, res) => {
     try {
       const ens = await Enseignant.find({ isActive: true }, "-password").then(
