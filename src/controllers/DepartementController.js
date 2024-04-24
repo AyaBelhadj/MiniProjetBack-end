@@ -5,7 +5,6 @@ const Enseignant = require("../models/enseignant");
 
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const departement = require("../models/departement");
 
 module.exports = {
   createdepartement: async (req, res) => {

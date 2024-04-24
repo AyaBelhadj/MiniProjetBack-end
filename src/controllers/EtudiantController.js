@@ -115,9 +115,10 @@ module.exports = {
       !adresse ||
       !dateNaiss ||
       !numTel ||
-      !numInscription /*!nomGroupe||*/
+      !numInscription || 
+      !nomGroupe
     ) {
-      return res.status(400).json({ message: "Please enter all fields" });
+      return res.status(400).json({ message: "Could not update Etudiant, Please enter all fields" });
     }
 
     try {
@@ -129,16 +130,16 @@ module.exports = {
       console.log(etud);
       if (!etud) {
         res.status(404).json({
-          message: "etudiant  not found ",
+          message: "Could not update Etudiant, Etudiant  not found ",
         });
       }
 
       res.status(200).json({
-        message: "etudiant successfuly updated",
+        message: "Etudiant Updated Successfuly",
         data: etud,
       });
     } catch (e) {
-      res.status(400).json({ error: e.message });
+      res.status(500).json({ error: e.message });
     }
   },
 
