@@ -51,7 +51,7 @@ isActive: {
   type:mongoose.Types.ObjectId,
   ref:'Departement'
   ,required :true
-} ,
+},
 fichier_emploi: {
   type: mongoose.Schema.Types.ObjectId,
   ref: 'Pdf',

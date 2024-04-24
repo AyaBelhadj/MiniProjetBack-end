@@ -38,8 +38,8 @@ const etudiantSchema = new mongoose.Schema({
     type: Boolean,
     default:true
   },
-  id_groupe:{
-    type:mongoose.Types.ObjectId,
+  nomGroupe:{
+    type: String,
     ref:'Groupe',
     required :true,
    

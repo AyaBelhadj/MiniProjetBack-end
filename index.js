@@ -1,54 +1,50 @@
 require("dotenv").config();
 
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = 5700;
-const http = require("http")
+const http = require("http");
+const mongoose = require('mongoose');
+const db = require('./src/DBconfig/mongoose')
 const cors=require("cors")
-const mongoose=require('mongoose')
-const dataBase=require('./src/DBconfig/mongoose')
-
-
 const multer = require('multer');
 const Pdf = require('./src/models/Pdf');
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocs = require("./src/swagger")
+const swaggerDocs = require("./src/swagger");
 
 const server = http.createServer(app);
 app.use(express.urlencoded({ extended: false }));
-// parse application/json
 app.use(express.json());
+app.use(cors());
 
-app.use(cors())
-const userRoute=require('./src/routes/UserRouter');
-app.use("/user",userRoute);
-const DepartementRoute=require('./src/routes/DepartementRouter');
-app.use("/departement",DepartementRoute);
-const EnseignantRoute=require('./src/routes/EnseignantRouter');
+const userRoute = require("./src/routes/UserRouter");
+const DepartementRoute = require("./src/routes/DepartementRouter");
+const EnseignantRoute = require("./src/routes/EnseignantRouter");
+const EtudiantRoute = require("./src/routes/EtudiantRouter");
+const GroupeRoute = require("./src/routes/GroupeRouter");
+const FiliereRoute = require("./src/routes/FiliereRouter");
+const EvenementRoute = require("./src/routes/EvenementRouter");
+const MatiereRoute = require("./src/routes/MatiereRouter");
+const NoteRoute = require("./src/routes/NoteRouter");
+const SupportDeCoursRoute = require("./src/routes/SupportDeCoursRouter");
+
+app.use("/user", userRoute);
+app.use("/departement", DepartementRoute);
 app.use(EnseignantRoute);
-
-const EtudiantRoute=require('./src/routes/EtudiantRouter');
 app.use(EtudiantRoute);
-const GroupeRoute=require('./src/routes/GroupeRouter');
 app.use(GroupeRoute);
-const FiliereRoute=require('./src/routes/FiliereRouter');
 app.use(FiliereRoute);
-const EvenementRoute=require('./src/routes/EvenementRouter');
 app.use(EvenementRoute);
-const MatiereRoute=require('./src/routes/MatiereRouter');
 app.use(MatiereRoute);
-const NoteRoute=require('./src/routes/NoteRouter');
 app.use(NoteRoute);
-const SupportDeCoursRoute=require('./src/routes/SupportDeCoursRouter');
 app.use(SupportDeCoursRoute);
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-app.use(upload.single('pdf'));
+app.use(upload.single("pdf"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
+console.log(process.env.DB_URL)
 server.listen(port, () => {
-  console.log('Listening on port ' + port);
+  console.log("Listening on port " + port);
 });
