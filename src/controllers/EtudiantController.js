@@ -115,10 +115,12 @@ module.exports = {
       !adresse ||
       !dateNaiss ||
       !numTel ||
-      !numInscription || 
+      !numInscription ||
       !nomGroupe
     ) {
-      return res.status(400).json({ message: "Could not update Etudiant, Please enter all fields" });
+      return res.status(400).json({
+        message: "Could not update Etudiant, Please enter all fields",
+      });
     }
 
     try {
@@ -236,6 +238,49 @@ module.exports = {
       res.status(400).json({ error: e.message });
     }
   },
+
+  getListEtudiantInGroup: async (req, res) => {
+    const etudiantID = req.query.etudiantID;
+    console.log("this is the etudiant ID: ", etudiantID);
+    if (!etudiantID) {
+      return res.status(400).json({
+        message:
+          "Cannot dislpay list of Etudiants. etudiantID is required in the request body",
+      });
+    }
+    try {
+      const etudiant = await Etudiant.findOne({
+        _id: "662a1f4542aea4a4c3fcbd6f",
+      });
+      console.log("this is the etudiant", etudiant);
+      if (!etudiant) {
+        return res.status(400).json({
+          message:
+            "Cannot display list of Etudiant. Current Etudiant not found",
+        });
+      }
+
+      console.log(etudiant);
+      const listEtudiants = await Etudiant.find({
+        isActive: true,
+        nomGroupe: etudiant.nomGroupe,
+      });
+      console.log(listEtudiants);
+      if (listEtudiants.length > 0) {
+        return res.status(200).json({
+          message: "list Etudiants found successfully",
+          data: listEtudiants,
+        });
+      } else {
+        return res.status(404).json({
+          message: "No students found in the same group",
+        });
+      }
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  },
+
   getallEtudiant: async (req, res) => {
     try {
       const etud = await Etudiant.find({ isActive: true }, "-password").then(

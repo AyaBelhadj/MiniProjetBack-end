@@ -15,6 +15,7 @@ route.post(`${adminAPI}/createEtudiant`,adminAuth,etudiantController.createEtudi
 route.get(`${adminAPI}/getEtudiant`,adminAuth,etudiantController.getetudiantByEmailOrNumInscription)
 route.get(`${etudAPI}/getEtudiant`,eutudAuth,etudiantController.getetudiantByEmailOrNumInscription)
 route.get(`${adminAPI}/getAllEtudiants`,adminAuth,etudiantController.getallEtudiant)
+route.get(`${etudAPI}/getAllEtudiantByGroup`,eutudAuth,etudiantController.getListEtudiantInGroup)
 
 
 

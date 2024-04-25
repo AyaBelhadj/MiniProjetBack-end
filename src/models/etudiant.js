@@ -1,50 +1,43 @@
-const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
+const mongoose = require("mongoose");
+const autoIncrement = require("mongoose-auto-increment");
 //autoIncrement.initialize(mongoose.connection);
-const User=require("./users");
+const User = require("./users");
 
 // Step 1: Define a schema
 const etudiantSchema = new mongoose.Schema({
-    nom: {
-        type: String,
-        required: true
-      },
-      prenom: {
-        type: String,
-        required: true
-      },
-      adresse: {
-        type: String,
-        required: true,
-        
-      },
-    dateNaiss: {
+  nom: {
+    type: String,
+    required: true,
+  },
+  prenom: {
+    type: String,
+    required: true,
+  },
+  adresse: {
+    type: String,
+    required: true,
+  },
+  dateNaiss: {
     type: Date,
     required: true,
-
   },
-     numTel: {
-     type: String,
-     required: true,
-     
-   }
-   ,
-   numInscription: {
-     type: Number,
-     required: true,
-     
-   },
-   isActive: {
-    type: Boolean,
-    default:true
-  },
-  nomGroupe:{
+  numTel: {
     type: String,
-    ref:'Groupe',
-    required :true,
-   
-  }
- 
+    required: true,
+  },
+  numInscription: {
+    type: Number,
+    required: true,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+  nomGroupe: {
+    type: String,
+    ref: "Groupe",
+    required: true,
+  },
 });
 // etudiantSchema.plugin(autoIncrement.plugin, {
 //     model: 'Etudiant',
@@ -56,5 +49,3 @@ const etudiantSchema = new mongoose.Schema({
 //const enseignant = mongoose.model('Enseignant', userSchema);
 module.exports = User.discriminator("Etudiant", etudiantSchema);
 //module.exports = enseignant;
-
-
