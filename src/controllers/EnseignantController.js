@@ -46,13 +46,19 @@ module.exports = {
       const user = await User.findOne({ email });
       console.log(user);
       if (user) {
-        return res.status(404).json({ message: "Account with the same email already exists!" });
+        return res
+          .status(404)
+          .json({ message: "Account with the same email already exists!" });
       }
 
       const enseignant = await Enseignant.findOne({ matricule });
       if (enseignant) {
-        return res.status(404).json({ message: "Enseignant with the same matricule already exists!" });
-      } 
+        return res
+          .status(404)
+          .json({
+            message: "Enseignant with the same matricule already exists!",
+          });
+      }
 
       const chefDep = departement.Chef_Departement;
       const salt = await bcrypt.genSalt(10);
@@ -233,7 +239,6 @@ module.exports = {
   archiverenseignant: async (req, res) => {
     console.log("seleyem", req.body);
     const { matricule } = req.body;
-
     if (!matricule) {
       return res.status(400).json({ message: "Please enter all fields" });
     }
@@ -246,17 +251,17 @@ module.exports = {
       ).then((enseignant) => {
         console.log("seleeeeyem", enseignant);
         if (!enseignant) {
-          res.status(500).json({
+          return res.status(500).json({
             message: "enseignant not deleted ",
           });
         } else {
-          res.status(200).json({
+          return res.status(200).json({
             message: "enseignant deleted successfuly ",
           });
         }
       });
     } catch (e) {
-      res.status(400).json({ error: e.message });
+      return res.status(400).json({ error: e.message });
     }
   },
 

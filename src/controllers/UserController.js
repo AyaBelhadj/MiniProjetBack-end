@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 
 module.exports = {
-
   createuser: async (req, res) => {
     console.log("seleyem", req.body);
     const { role, email, password } = req.body;
@@ -48,7 +47,7 @@ module.exports = {
       res.status(400).json({ error: e.message });
     }
   },
-  
+
   login: (req, res) => {
     const { email, password } = req.body;
     // Simple validation
@@ -59,14 +58,14 @@ module.exports = {
         .then(async (user) => {
           console.log("+++++++++++" + user);
           if (!user) {
-            res.status(401).json({
+            return res.status(401).json({
               message: "user with this email does not exist",
             });
           } else {
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (!isMatch) {
-              res.status(400).json({
+              return res.status(400).json({
                 message: "invalid password",
               });
             } else {
@@ -77,7 +76,7 @@ module.exports = {
               );
               console.log(token);
               console.log(jwt.verify(token, "secret"));
-              res.status(200).json({
+              return res.status(200).json({
                 token: token,
                 userId: user._id,
                 userRole: user.role,
@@ -113,7 +112,7 @@ module.exports = {
             const isMatch = await bcrypt.compare(oldPassword, user.password);
 
             if (!isMatch) {
-              res.status(400).json({
+              return res.status(400).json({
                 message: "invalid password",
               });
             } else {
@@ -127,8 +126,8 @@ module.exports = {
               const savedUser = await user.save();
               if (!savedUser)
                 throw Error("Something went wrong saving the user");
-              res.status(200).json({
-                message: "pasword succfully changed !",
+              return res.status(200).json({
+                message: "password successfully changed !",
               });
             }
           }
@@ -199,7 +198,7 @@ module.exports = {
       res.status(500).json({ message: "Error resetting password" });
     }
   },
-  
+
   resetpassword: async (req, res) => {
     const { password, confirmpassword } = req.body;
     //return res.status(200).json({"aze":req.params.token})
@@ -214,7 +213,7 @@ module.exports = {
     try {
       User.findById({ _id }).then(async (user) => {
         if (!user) {
-          res.status(500).json({
+          return res.status(500).json({
             message: "user not found ",
             data: null,
           });
@@ -238,7 +237,7 @@ module.exports = {
           const hashedPassword = await bcrypt.hash(password, salt);
           user.password = hashedPassword;
           user.save();
-          res.status(200).json({
+          return res.status(200).json({
             message: "Password updated successfully",
             data: user,
           });
@@ -246,7 +245,7 @@ module.exports = {
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Error Reset password" });
+      return res.status(500).json({ message: "Error Reset password" });
     }
   },
 };

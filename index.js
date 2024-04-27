@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
+
 const userRoute = require("./src/routes/UserRouter");
 const DepartementRoute = require("./src/routes/DepartementRouter");
 const EnseignantRoute = require("./src/routes/EnseignantRouter");
