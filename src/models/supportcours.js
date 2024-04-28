@@ -22,7 +22,6 @@ const supportCoursSchema = new mongoose.Schema({
         ref: 'Matiere',
         required: true
     },
-   
 });
 
 // Étape 2: Créer un modèle

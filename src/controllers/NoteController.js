@@ -1,5 +1,5 @@
 const Note = require("../models/note");
-const Matiere=require('../models/matiere')
+const Matiere = require("../models/matiere");
 
 module.exports = {
   createNote: async (req, res) => {
@@ -14,7 +14,7 @@ module.exports = {
         id_etudiant,
         id_matiere,
         note,
-        annee_universitaire
+        annee_universitaire,
       });
 
       const savedNote = await newNote.save();
@@ -30,13 +30,16 @@ module.exports = {
 
   updateNote: async (req, res) => {
     try {
-      const { id, id_etudiant, id_matiere, note, annee_universitaire } = req.body;
+      const { id, id_etudiant, id_matiere, note, annee_universitaire } =
+        req.body;
 
       if (!id || !id_etudiant || !id_matiere || !note || !annee_universitaire) {
         return res.status(400).json({ message: "Please enter all fields" });
       }
 
-      const updatedNote = await Note.findByIdAndUpdate(id, req.body, { new: true });
+      const updatedNote = await Note.findByIdAndUpdate(id, req.body, {
+        new: true,
+      });
 
       if (!updatedNote) {
         return res.status(404).json({ message: "Note not found" });
@@ -76,10 +79,10 @@ module.exports = {
 
   getNoteByID: async (req, res) => {
     try {
-    //   const  nom  = req.query.nom;
-      const id=req.query.id;
+      //   const  nom  = req.query.nom;
+      const id = req.query.id;
 
-      if (/*!nom&&*/!id ) {
+      if (/*!nom&&*/ !id) {
         return res.status(400).json({ message: "Please enter all fields" });
       }
 
@@ -88,8 +91,8 @@ module.exports = {
         note = await Note.findOne({ nom: nom })
       }
       else{*/
-       const note = await Note.findOne({ _id: id })
-     // }
+      const note = await Note.findOne({ _id: id });
+      // }
 
       if (!note) {
         res.status(404).json({
@@ -98,7 +101,7 @@ module.exports = {
       } else {
         res.status(200).json({
           message: "Note found successfully ",
-          data:note
+          data: note,
         });
       }
     } catch (error) {
@@ -120,31 +123,40 @@ module.exports = {
   },
   getAllNotesByEtudiant: async (req, res) => {
     try {
-      const  id_etudiant  = req.query.id_etudiant;
+      const id_etudiant = req.query.id_etudiant;
 
       if (!id_etudiant) {
-        return res.status(400).json({ message: "Please provide the student ID" });
+        return res.status(400).json({
+          message: "Cannot fetch the notes. Please provide the student ID",
+        });
       }
 
-      const notes = await Note.find({ id_etudiant: id_etudiant });
+      const notes = await Note.find({ id_etudiant: id_etudiant })
+        .populate("id_etudiant", "nom prenom")
+        .populate("id_matiere", "nom");
 
       res.status(200).json({
         message: "All notes fetched successfully for the student",
         data: notes,
       });
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
   },
+
   getAllNotesByCurrentEtudiant: async (req, res) => {
     try {
-      const  id_etudiant  = req.user.userId;
+      const id_etudiant = req.user.userId;
 
       if (!id_etudiant) {
-        return res.status(400).json({ message: "Please provide the student ID" });
+        return res.status(400).json({
+          message: "Cannot fetch the notes. Please provide the student ID",
+        });
       }
 
-      const notes = await Note.find({ id_etudiant: id_etudiant });
+      const notes = await Note.find({ id_etudiant: id_etudiant })
+        .populate("id_etudiant", "nom prenom -_id -__t")
+        .populate("id_matiere", "nom -_id");
 
       res.status(200).json({
         message: "All notes fetched successfully for the student",
@@ -154,27 +166,34 @@ module.exports = {
       res.status(400).json({ message: error.message });
     }
   },
+
   getNoteByNomMatiere: async (req, res) => {
     try {
       const { nom_matiere } = req.query;
-      const  id_etudiant  = req.user.userId;
+      const id_etudiant = req.user.userId;
 
       if (!id_etudiant) {
-        return res.status(400).json({ message: "Please provide the student ID" });
+        return res
+          .status(400)
+          .json({ message: "Please provide the student ID" });
       }
 
       if (!nom_matiere) {
-        return res.status(400).json({ message: "Please provide the name of the subject" });
+        return res
+          .status(400)
+          .json({ message: "Please provide the name of the subject" });
       }
 
-
       const matiere = await Matiere.findOne({ nom: nom_matiere });
-if (!matiere){
-  res.status(404).json({
-    message: "matiere not found for the given subject",
-  });
-}
-const note=await Note.findOne({ id_matiere: matiere._id,id_etudiant:id_etudiant });
+      if (!matiere) {
+        res.status(404).json({
+          message: "matiere not found for the given subject",
+        });
+      }
+      const note = await Note.findOne({
+        id_matiere: matiere._id,
+        id_etudiant: id_etudiant,
+      });
       if (!note) {
         res.status(404).json({
           message: "Note not found for the given subject",
@@ -182,12 +201,11 @@ const note=await Note.findOne({ id_matiere: matiere._id,id_etudiant:id_etudiant 
       } else {
         res.status(200).json({
           message: "Note found successfully for the given subject",
-          data: {note:note,matiere:matiere},
+          data: { note: note, matiere: matiere },
         });
       }
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   },
-
 };

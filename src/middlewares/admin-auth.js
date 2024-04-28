@@ -10,7 +10,7 @@ function verifyToken(req, res, next) {
       return res
         .status(401)
         .send({ message: "No token, authorization denied" });
-        console.log(res)
+      console.log(res);
     }
     jwt.verify(token, "secret", (err, decoded) => {
       if (err) {
