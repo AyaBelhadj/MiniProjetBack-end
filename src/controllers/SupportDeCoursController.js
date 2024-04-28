@@ -172,11 +172,11 @@ module.exports = {
         .then((cours) => {
           console.log("seleeeeyem", cours);
           if (!cours) {
-            res.status(404).json({
+            return res.status(404).json({
               message: "cours not found ",
             });
           } else {
-            res.status(200).json({
+            return res.status(200).json({
               message: "cours found successfully ",
               data: cours,
             });

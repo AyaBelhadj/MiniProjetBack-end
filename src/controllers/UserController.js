@@ -99,7 +99,7 @@ module.exports = {
     const { oldPassword, newPassword } = req.body;
     // Simple validation
     if (!oldPassword || !newPassword) {
-      return res.status(400).json({ message: "Please enter all fields" });
+      return res.status(400).json({ message: "Veuillez remplir tous les champs" });
     } else {
       User.findById({ _id: req.user.userId })
         .then(async (user) => {
@@ -113,7 +113,7 @@ module.exports = {
 
             if (!isMatch) {
               return res.status(400).json({
-                message: "invalid password",
+                message: "Votre Mot de passe actuel est incorrect. Veullier réessayer",
               });
             } else {
               const salt = await bcrypt.genSalt(10);
