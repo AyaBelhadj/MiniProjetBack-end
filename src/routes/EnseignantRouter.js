@@ -3,12 +3,24 @@ const enseignantController=require("../controllers/EnseignantController")
 const userAuth=require('../middlewares/user-auth');
 const adminAuth=require('../middlewares/admin-auth');
 const ensAuth=require('../middlewares/enseignant-auth');
+require("dotenv").config();
+const fileUrl = process.env.fileURL;
+
 const adminAPI='/admin';
 const ensAPI='/enseignant';
 
 const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, `${fileUrl}/enseignant`)
+    },
+    filename: function (req, file, cb) 
+    {  cb(null, file.originalname); 
+        console.log('coucouuuuuu',req.query.id)
+    },
+
+  })
+  const upload = multer({ storage });
 
 
 const route=express.Router();

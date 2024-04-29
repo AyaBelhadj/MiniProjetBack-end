@@ -3,14 +3,28 @@ const groupeController=require("../controllers/GroupeController")
 const userAuth=require('../middlewares/user-auth');
 const adminAuth=require('../middlewares/admin-auth');
 const ensAuth=require('../middlewares/enseignant-auth');
+require("dotenv").config();
+
 const adminAPI='/admin';
 const ensAPI='/enseignant'
 const etudAPI='/etudiant'
 const userAPI='/user'
+const fileUrl = process.env.fileURL;
+
 
 
 const multer = require('multer');
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, `${fileUrl}/group`)
+    },
+    filename: function (req, file, cb) 
+    { 
+         cb(null, file.originalname); 
+        console.log('coucouuuuuu',req.query.id)
+    },
+
+  })
 const upload = multer({ storage });
 
 

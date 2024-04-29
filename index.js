@@ -43,6 +43,7 @@ app.use(SupportDeCoursRoute);
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 app.use(upload.single("pdf"));
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 server.listen(port, () => {
