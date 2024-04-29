@@ -38,15 +38,56 @@ module.exports = {
       /* const token = jwt.sign({ id: savedUser._id }, JWT_SECRET, {
             expiresIn: 3600,
           }); */
-
-      res.status(200).json({
-        message: "user successfuly registred",
-        user: savedUser,
-      });
-    } catch (e) {
-      res.status(400).json({ error: e.message });
-    }
-  },
+    
+          res.status(200).json({
+            message: "user successfuly registred",
+            user: savedUser,
+          });
+        } catch (e) {
+          res.status(400).json({ error: e.message });
+        }
+      }
+      ,
+    login: (req, res) => {
+        const { email, password } = req.body;
+        // Simple validation
+        if (!email || !password) {
+          return res.status(400).json({ message: "Please enter all fields" });
+        } else {
+          User.findOne({ email: email }).then (  async (user) => {
+            console.log("+++++++++++"+user)
+            if (!user) {
+              res.status(401).json({
+                message: "user with this email does not exist",
+              });
+            } else {
+              const isMatch = await bcrypt.compare(password, user.password);
+    
+              if (!isMatch) {
+                res.status(400).json({
+                  message: "invalid password",
+                });
+              } else {
+                const token = jwt.sign({userId: user._id,role:user.role }, "secret",{noTimestamp:true,expiresIn:'1d'});
+                console.log(token)
+                console.log( jwt.verify(token, "secret"));
+                res.status(200).json({
+                  token: token,
+                  userId: user._id,
+                  userEmail:user.email,
+                  userAvatar:user.avatar,
+                  userRole:user.role
+                });
+              }
+            }
+          }).catch((error)=>{ 
+            console.log(error)
+            res.status(500).json({
+            message: "sqlError",
+          });
+        });
+        }
+      },
 
   login: (req, res) => {
     const { email, password } = req.body;

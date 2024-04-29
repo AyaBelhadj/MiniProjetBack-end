@@ -1,14 +1,15 @@
-require("dotenv").config();
-
-const express = require("express");
+require ('dotenv').config()
+const express = require('express');
 const app = express();
 const port = 5700;
-const http = require("http");
-const mongoose = require("mongoose");
-const db = require("./src/DBconfig/mongoose");
-const cors = require("cors");
-const multer = require("multer");
-const Pdf = require("./src/models/Pdf");
+const http = require("http")
+const cors=require("cors")
+const mongoose=require('mongoose')
+const dataBase=require('./src/DBconfig/mongoose')
+
+
+const multer = require('multer');
+const Pdf = require('./src/models/Pdf');
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./src/swagger");
 
