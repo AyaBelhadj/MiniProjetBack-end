@@ -310,13 +310,12 @@ module.exports = {
       } else {
         ens = await Enseignant.findOne({ matricule: matricule }, "-password");
       }
-
       if (!ens) {
-        res.status(404).json({
+        return res.status(404).json({
           message: "enseignant not found ",
         });
       } else {
-        res.status(200).json({
+        return res.status(200).json({
           message: "enseignant found successfuly ",
           data: ens,
         });

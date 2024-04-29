@@ -1,10 +1,11 @@
 const Evenement = require("../models/evenement");
+const User = require("../models/users");
 module.exports = {
   createEvenement: async (req, res) => {
-    console.log("seleyem", req.body);
-    const { nom, id_demandeur, date_evenement, id_presentateur } = req.body;
+    const { nom, email_demandeur, date_evenement, email_presentateur } =
+      req.body;
 
-    if (!nom || !id_demandeur || !date_evenement || !id_presentateur) {
+    if (!nom || !email_demandeur || !date_evenement || !email_presentateur) {
       return res.status(400).json({ message: "Please enter all fields" });
     }
 
@@ -14,13 +15,22 @@ module.exports = {
 
       console.log(evenement);
       if (evenement) {
-        {
-          return res
-            .status(409)
-            .json({ message: " Evenement already exists!" });
-        }
+        return res.status(409).json({ message: " Evenement deja existe!" });
       }
 
+      const id_demandeur = await User.findOne({ email: email_demandeur });
+      const id_presentateur = await User.findOne({ email: email_presentateur });
+
+      if (!id_demandeur) {
+        return res
+          .status(404)
+          .json({ message: " l'email du demandeur n'existe pas" });
+      }
+      if (!id_presentateur) {
+        return res
+          .status(404)
+          .json({ message: " l'email du presentateur n'existe pas" });
+      }
       const newEvenement = new Evenement({
         nom,
         id_demandeur,
@@ -70,17 +80,19 @@ module.exports = {
       res.status(400).json({ error: e.message });
     }
   },
+
   updateEvenement: async (req, res) => {
     console.log("seleyem", req.body);
-    const { id, nom, id_demandeur, date_evenement, id_presentateur } = req.body;
+    const { nom, email_demandeur, date_evenement, email_presentateur } =
+      req.body;
 
-    if (!id || !nom || !id_demandeur || !date_evenement || !id_presentateur) {
+    if (!nom || !email_demandeur || !date_evenement || !email_presentateur) {
       return res.status(400).json({ message: "Please enter all fields" });
     }
 
     try {
       const evenement = await Evenement.findByIdAndUpdate(
-        { _id: id },
+        { nom: nom },
         req.body,
         { new: true }
       ).then(async (evenement) => {
@@ -171,17 +183,23 @@ module.exports = {
     try {
       let evenement;
       if (nom) {
-        evenement = await Evenement.findOne({ nom: nom });
+        evenement = await Evenement.findOne({ nom: nom }).populate(
+          "id_demandeur id_presentateur",
+          "email -_id -__t"
+        );
       } else {
-        evenement = await Evenement.findOne({ _id: id });
+        evenement = await Evenement.findOne({ _id: id }).populate(
+          "id_demandeur id_presentateur",
+          "email -_id -__t"
+        );
       }
 
       if (!evenement) {
-        res.status(404).json({
+        return res.status(404).json({
           message: "evenement not found ",
         });
       } else {
-        res.status(200).json({
+        return res.status(200).json({
           message: "evenement found successfuly ",
           data: evenement,
         });

@@ -18,10 +18,10 @@ function verifyToken(req, res, next) {
           .send({ message: "Session expired, authorization denied" });
       }
       req.user = decoded;
-      if (!req.user.role || req.user.role !== "enseignant")
+      if (!req.user.role && req.user.role !== "enseignant" && req.user.role !== "chefDepartement")
         return res
           .status(401)
-          .send({ message: "Authorization denied,must be teacher" });
+          .send({ message: "Authorization denied,must be teacher or chefDeparatement" });
       return next();
     });
   } catch (err) {
