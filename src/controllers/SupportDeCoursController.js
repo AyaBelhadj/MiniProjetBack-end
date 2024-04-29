@@ -6,7 +6,6 @@ const upload = multer({ storage });
 const Pdf = require("../models/Pdf");
 
 module.exports = {
-    
   createCours: async (req, res) => {
     console.log("seleyem", req.body);
     const { nom, id_matiere } = req.body;
@@ -76,6 +75,34 @@ module.exports = {
       });
     }
   },
+
+  getFile: async (req, res) => {
+    try {
+      // Get the pdf id from the request parameters
+      const pdfId = req.query.id;
+
+      // Find the pdf by its id
+      const pdf = await Pdf.findById(pdfId);
+
+      if (!pdf) {
+        return res.status(404).json({ message: "PDF not found" });
+      }
+
+      // Set the response headers
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        'inline; filename="' + pdf.name + '"'
+      );
+
+      // Send the pdf data as a buffer
+      res.send(pdf.data);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: `Server Error: ${err.message}` });
+    }
+  },
+
   updateCours: async (req, res) => {
     console.log("seleyem", req.body);
     const { id, nom, id_matiere } = req.body;

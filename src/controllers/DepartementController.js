@@ -196,7 +196,9 @@ module.exports = {
   },
   getalldepartement: async (req, res) => {
     try {
-      const dept = await Departement.find({ isActive: true }).then(
+      const dept = await Departement.find({ isActive: true })
+      .populate("Chef_Departement")
+      .then(
         (departement) => {
           console.log("seleeeeyem", departement);
           if (!departement) {
