@@ -53,11 +53,9 @@ module.exports = {
 
       const enseignant = await Enseignant.findOne({ matricule });
       if (enseignant) {
-        return res
-          .status(404)
-          .json({
-            message: "Enseignant with the same matricule already exists!",
-          });
+        return res.status(404).json({
+          message: "Enseignant with the same matricule already exists!",
+        });
       }
 
       const chefDep = departement.Chef_Departement;
@@ -325,12 +323,38 @@ module.exports = {
     }
   },
 
+  getenseignantByDepartementID: async (req, res) => {
+    console.log("seleyem", req.query);
+    const DepID = req.query.DepID;
+
+    if (!DepID) {
+      return res.status(400).json({ message: "Please enter all fields" });
+    }
+    try {
+      ens = await Enseignant.find({ id_departement: DepID }, "-password")
+        .populate("fichier_emploi");
+
+      if (!ens) {
+        return res.status(404).json({
+          message: "enseignant not found ",
+        });
+      } else {
+        return res.status(200).json({
+          message: "enseignant found successfuly ",
+          data: ens,
+        });
+      }
+    } catch (e) {
+      res.status(400).json({ error: e.message });
+    }
+  },
+
   getallenseignant: async (req, res) => {
     try {
       const ens = await Enseignant.find({ isActive: true }, "-password")
-      .populate("id_departement")
-      .then(
-        (enseignant) => {
+        .populate("id_departement")
+        .populate("fichier_emploi")
+        .then((enseignant) => {
           console.log("seleeeeyem", enseignant);
           if (!enseignant) {
             res.status(404).json({
@@ -343,8 +367,7 @@ module.exports = {
               data: enseignant,
             });
           }
-        }
-      );
+        });
     } catch (e) {
       res.status(400).json({ error: e.message });
     }

@@ -250,7 +250,7 @@ module.exports = {
     }
     try {
       const etudiant = await Etudiant.findOne({
-        _id: "662a1f4542aea4a4c3fcbd6f",
+        _id: etudiantID,
       });
       console.log("this is the etudiant", etudiant);
       if (!etudiant) {
@@ -274,6 +274,39 @@ module.exports = {
       } else {
         return res.status(404).json({
           message: "No students found in the same group",
+        });
+      }
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  },
+
+  getListEtudiantByGroupName: async (req, res) => {
+    const nomGroupe = req.query.nomGroupe;
+    if (!nomGroupe) {
+      return res.status(400).json({
+        message:
+          "Cannot dislpay list of Etudiants. nomGroupe is required in the request body",
+      });
+    }
+    try {
+      const etudiants = await Etudiant.find({
+        nomGroupe: nomGroupe,
+      })
+
+      if (!etudiants) {
+        return res.status(400).json({
+          message: "Cannot display list of Etudiant. nom Groupe not found",
+        });
+      }
+      if (etudiants.length > 0) {
+        return res.status(200).json({
+          message: "list Etudiants found successfully",
+          data: etudiants,
+        });
+      } else {
+        return res.status(404).json({
+          message: "No students found in that group",
         });
       }
     } catch (e) {

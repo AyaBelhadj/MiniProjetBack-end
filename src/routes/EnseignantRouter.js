@@ -57,6 +57,12 @@ route.get(
   enseignantController.getenseignantByEmailOrMatricule
 );
 route.get(
+  `${ensAPI}/getEnseignantByDepID`,
+  ensAuth,
+  enseignantController.getenseignantByDepartementID
+);
+
+route.get(
   `${adminAPI}/getAllEnseignants`,
   adminAuth,
   enseignantController.getallenseignant

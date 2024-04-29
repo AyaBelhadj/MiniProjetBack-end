@@ -13,7 +13,7 @@ route.get(`${userAPI}/getAllEvenements`,userAuth,evenementController.getAllEvene
 
 
 route.post(`${adminAPI}/accepterEvenement`,adminAuth,evenementController.accepterEvenement)
-route.post(`${adminAPI}/archiverEvenement`,evenementController.archiverEvenement)
+route.post(`${adminAPI}/archiverEvenement`,adminAuth,evenementController.archiverEvenement)
 route.post(`${adminAPI}/activerEvenement`,adminAuth,evenementController.activerEvenement)
 route.post(`${ensAPI}/updateEvenement`,ensAuth,evenementController.updateEvenement)
 
