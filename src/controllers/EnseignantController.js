@@ -328,7 +328,9 @@ module.exports = {
 
   getallenseignant: async (req, res) => {
     try {
-      const ens = await Enseignant.find({ isActive: true }, "-password").then(
+      const ens = await Enseignant.find({ isActive: true }, "-password")
+      .populate("id_departement")
+      .then(
         (enseignant) => {
           console.log("seleeeeyem", enseignant);
           if (!enseignant) {
